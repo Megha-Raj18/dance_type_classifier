@@ -24,8 +24,9 @@ def process_sequence(seq_id, keypoints_path, motions_path, num_frames, use_optim
     # get data from motion pkl files
     motion_file = os.path.join(motions_path, f"{seq_id}.pkl")
 
-    with open(motion_file, "rb") as f:
-        motion_info = pickle.load(f)
+    # for later if i plan to train on mesh params as well
+    # with open(motion_file, "rb") as f:
+    #     motion_info = pickle.load(f)
     
     genre = extract_genre_from_seqid(seq_id) #label for training
 
