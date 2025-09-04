@@ -48,6 +48,9 @@ def main():
     train_dataset = DanceDataset("training.pt")
     train_loader = DataLoader(train_dataset, batch_size = 16, shuffle = True)
 
+    validation_dataset = DanceDataset("validation.pt")
+    validation_loader = DataLoader(validation_dataset, batch_size = 16, shuffle = False)
+
     num_genres = len(train_dataset.genre_to_index)
     input_size = train_dataset.X.shape[2]
     hidden_size = 256
@@ -58,6 +61,8 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr = 1e-3)
 
     for epoch in range(20):
+
+        #training
         model.train()
         total_loss, correct, total = 0, 0, 0
 
@@ -74,9 +79,27 @@ def main():
             _, pred = outputs.max(1)
             correct += pred.eq(y).sum().item()
             total += y.size(0)
+
+        training_accuracy = 100.0 * (correct/total)
+
+        #validation
+        val_loss, val_correct, val_total = 0, 0, 0
+        with torch.no_grad():
+            for X, y in validation_loader:
+                X, y = X.to(device), y.to(device)
+                outputs = model(X)
+                loss = criterion(outputs, y)
+
+                val_loss += loss.item()
+                _, pred = outputs.max(1)
+                val_correct += pred.eq(y).sum().item()
+                val_total += y.size(0)
         
-        acc = 100.0 * (correct/total)
-        print(f"Epoch {epoch}, Loss: {total_loss/len(train_loader):.4f}, Acc: {acc:.2f}%")
+        val_acc = 100.0 * (val_correct/val_total)
+        
+        print(f"Epoch {epoch}: ")
+        print(f"Training Loss: {total_loss/len(train_loader):.4f}, Training Accuracy: {training_accuracy:.2f}%")
+        print(f"Validation Loss: {val_loss/len(validation_loader):.4f}, Validation Accuracy: {val_acc:.2f}%")
     
 if __name__ == "__main__":
     main()
