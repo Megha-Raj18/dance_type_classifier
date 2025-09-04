@@ -37,7 +37,7 @@ class DanceGenreLSTM(nn.Module):
     
     def forward(self, x):
         out, _ = self.lstm(x)
-        out = out[:, -1, :]
+        out = out.mean(dim = 1)
         out = self.fully_connected(out)
         return out
     
@@ -50,7 +50,7 @@ def main():
 
     num_genres = len(train_dataset.genre_to_index)
     input_size = train_dataset.X.shape[2]
-    hidden_size = 128
+    hidden_size = 256
 
     model = DanceGenreLSTM(input_size, hidden_size, num_genres)
 
