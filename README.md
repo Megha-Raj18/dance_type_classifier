@@ -1,3 +1,3 @@
 # dance_type_classifier
 
-test
+first train on simple LSTM model:
