@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch
 from torch.utils.data import Dataset, DataLoader
 import torch.optim as optim
+import torch.nn.functional as F
 
 class DanceDataset(Dataset):
     def __init__(self, pt_file):
@@ -32,11 +33,19 @@ class DanceGenreLSTM(nn.Module):
             batch_first = True,
             dropout = dropout
         )
+        #trying to add attention
+        # self.attn = nn.Linear(hidden_size, 1)
 
         self.fully_connected = nn.Linear(hidden_size, num_genres)
     
     def forward(self, x):
         out, _ = self.lstm(x)
+
+        # #attention scores
+        # attn_weights = self.attn(out)
+        # attn_weights = F.softmax(attn_weights, dim = 1)
+
+        # ctx = torch.sum(attn_weights * out, dim = 1)
         out = out.mean(dim = 1)
         out = self.fully_connected(out)
         return out
@@ -83,10 +92,12 @@ def main():
         training_accuracy = 100.0 * (correct/total)
 
         #validation
+        model.eval()
         val_loss, val_correct, val_total = 0, 0, 0
         with torch.no_grad():
             for X, y in validation_loader:
                 X, y = X.to(device), y.to(device)
+
                 outputs = model(X)
                 loss = criterion(outputs, y)
 
