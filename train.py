@@ -33,19 +33,21 @@ class DanceGenreLSTM(nn.Module):
             batch_first = True,
             dropout = dropout
         )
-        #trying to add attention
+        # trying to add attention
         # self.attn = nn.Linear(hidden_size, 1)
-
+        # self.dropout = nn.Dropout(0.3)
         self.fully_connected = nn.Linear(hidden_size, num_genres)
     
     def forward(self, x):
         out, _ = self.lstm(x)
 
         # #attention scores
-        # attn_weights = self.attn(out)
+        # attn_weights = self.attn(out).squeeze(-1) # B batch, T frames
         # attn_weights = F.softmax(attn_weights, dim = 1)
 
-        # ctx = torch.sum(attn_weights * out, dim = 1)
+        # ctx = torch.bmm(attn_weights.unsqueeze(1), out) #bmm more numberically stable
+        # ctx = ctx.squeeze(1)
+        # ctx = self.dropout(ctx)
         out = out.mean(dim = 1)
         out = self.fully_connected(out)
         return out
@@ -67,8 +69,7 @@ def main():
     model = DanceGenreLSTM(input_size, hidden_size, num_genres)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr = 1e-3)
-
+    optimizer = optim.Adam(model.parameters(), lr = 5e-4, weight_decay = 1e-5) #attention layers may maginify gradients so we try using mild L2 reg
     for epoch in range(20):
 
         #training
