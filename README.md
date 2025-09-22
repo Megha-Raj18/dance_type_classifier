@@ -34,4 +34,41 @@ Epoch 19:
 Training Loss: 1.1361, Training Accuracy: 60.37%
 Validation Loss: 1.1503, Validation Accuracy: 61.43%
 
+Run 2:
+
+stored in training_outputs/temporal_pooling/train_output_first_300_frames_(2).txt
+we see that increasing the number of epochs from 20 to 30 substantially improves the training and validation accuracy, more epochs allows the model to really fit into the data
+
+Epoch 29: 
+Training Loss: 0.4258, Training Accuracy: 85.60%
+Validation Loss: 0.4503, Validation Accuracy: 87.14%
+
+Run 3:
+
+stored in training_outputs/temporal_pooling/train_output_every_3rd_frame.txt
+instead of using the first 300 frames of the motion sequence, I decided to try using every 3rd (or so) frame from each sequence using linspace which improved the train/val accuracy by around 4 - 5%. This seems to be a better idea since the model gets enough info on the entire motion sequence without
+  a) looking at all 720 frames
+  b) capturing miniscule differences between consecutive frames
+
+Epoch 29: 
+Training Loss: 0.2972, Training Accuracy: 90.55%
+Validation Loss: 0.3046, Validation Accuracy: 91.43%
+
+Note: Attempt at adding attention
+
+stored in training_outputs/attention/train_output_every_3rd_frame.txt
+adding attention actually made the accuracy worse which could be due to the following reasons:
+  a) adding attention adds more parameters for the model to learn, but with a relatively small dataset (868 motion sequences) it may lead to overfitting and just poor model performance in general
+  b) attention usually focuses specific frames that the model believes are important to the classification, but working with dance data its better to use an overall look at all the frames rather than a certain subset of them
+
+Epoch 29: 
+Training Loss: 1.3194, Training Accuracy: 52.30%
+Validation Loss: 1.2696, Validation Accuracy: 55.71%
+
+
+
+
+
+
+
 
