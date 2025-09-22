@@ -70,7 +70,7 @@ def main():
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr = 5e-4, weight_decay = 1e-5) #attention layers may maginify gradients so we try using mild L2 reg
-    for epoch in range(20):
+    for epoch in range(30):
 
         #training
         model.train()
