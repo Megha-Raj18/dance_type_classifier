@@ -70,6 +70,9 @@ def main():
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr = 5e-4, weight_decay = 1e-5) #attention layers may maginify gradients so we try using mild L2 reg
+
+    best_val_acc = 0
+
     for epoch in range(30):
 
         #training
@@ -108,6 +111,11 @@ def main():
                 val_total += y.size(0)
         
         val_acc = 100.0 * (val_correct/val_total)
+
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            torch.save(model.state_dict(), "best_model.pth")
+            print("Saved best model")
         
         print(f"Epoch {epoch}: ")
         print(f"Training Loss: {total_loss/len(train_loader):.4f}, Training Accuracy: {training_accuracy:.2f}%")
