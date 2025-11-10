@@ -63,6 +63,9 @@ first test run using every 3rd frame achieved around 73% test accuracy and we ca
 
   <img width="519" height="440" alt="image" src="https://github.com/user-attachments/assets/3d901c32-aa12-4f1b-a47c-cb149112a02b" />
 
+Adding velocity information to the pose data improved test accuracy to ~80% and we can see this in the confusion matrix that there are lesser misclassifications 
+
+<img width="520" height="429" alt="image" src="https://github.com/user-attachments/assets/81068b4d-1ece-409f-ba94-8ed8b68dd078" />
 
 Note: Attempt at adding attention
 
