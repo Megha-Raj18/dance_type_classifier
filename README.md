@@ -54,6 +54,16 @@ Epoch 29:
 Training Loss: 0.2972, Training Accuracy: 90.55%
 Validation Loss: 0.3046, Validation Accuracy: 91.43%
 
+TESTING:
+
+first test run using every 3rd frame achieved around 73% test accuracy and we can see from the confusion matrix alot of classes do get mislabelled. This could be because of 
+- two types of dances having very similar poses (middle hip hop [MH] and LA style hip hop [LH], JB and WA - similar loops formed by arms??) - main reason probably
+- minor signature moves of each dance type being overshadowed by taking an average (temporal pooling)
+- not enough data to capture signature steps/moves
+
+  <img width="519" height="440" alt="image" src="https://github.com/user-attachments/assets/3d901c32-aa12-4f1b-a47c-cb149112a02b" />
+
+
 Note: Attempt at adding attention
 
 stored in training_outputs/attention/train_output_every_3rd_frame.txt
