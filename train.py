@@ -12,7 +12,7 @@ class DanceDataset(Dataset):
         self.genre_to_index = data["genre_to_index"]
 
         #flatten to single vector per frame
-        # N videos for training, T frames (all 300), J joints (17), C = 3 coordinates (3d)
+        # N videos for training, T frames (all 300), J joints (17), C = 3 coordinates (3d) -now 6 including velocity
         N, T, J, C = self.X.shape
         self.X = self.X.view(N, T, J*C)
     

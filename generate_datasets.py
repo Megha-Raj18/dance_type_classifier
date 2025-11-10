@@ -3,11 +3,11 @@ import pickle
 import numpy as np
 import torch
 
-split_file_path = "aist_plusplus_final\\splits\\pose_train.txt"
+split_file_path = "aist_plusplus_final\\splits\\pose_test.txt"
 keypoints_path = "aist_plusplus_final\\keypoints3d"
 motions_path = "aist_plusplus_final\\motions"
 num_frames = 300
-output_path = "training.pt"
+output_path = "testing.pt"
 
 
 def load_split(split_file_path):
@@ -18,6 +18,11 @@ def extract_genre_from_seqid(seq_id: str) -> str:
     # AIST++ seq_id format: gXX_sXX_cXX_dXX_mXX_chXX
     # after g is the genre code
     return seq_id.split("_")[0][1:]  
+
+def add_velocity(pose_data):
+    velocity = np.diff(pose_data, axis = 0, prepend=pose_data[ :1]) #prepend here keeps the first frame since diff returns T-1
+    return np.concatenate([pose_data, velocity], axis = 2) #shape now becomes (T frames, J joints, 6 (3 pos + 3 vel) points)
+
     
 def process_sequence(seq_id, keypoints_path, motions_path, num_frames, use_optim = True):
 
@@ -45,6 +50,7 @@ def process_sequence(seq_id, keypoints_path, motions_path, num_frames, use_optim
     pelvis = pelvis[:, None, :]
     pose_data = pose_data - pelvis
     pose_data = pose_data / np.linalg.norm(pose_data, axis = -1, keepdims = True).max()
+    pose_data = add_velocity(pose_data)
 
     #sequence length
     if pose_data.shape[0] > num_frames:
